@@ -10,7 +10,13 @@ import {
     Field,
     Area,
     Popup,
-    Picker
+    Picker,
+    DatetimePicker,
+    RadioGroup,
+    Radio,
+    Checkbox,
+    CheckboxGroup,
+    Switch
 } from "vant";
 
 Vue.use(Area);
@@ -22,3 +28,9 @@ Vue.use(Form);
 Vue.use(Field);
 Vue.use(Popup);
 Vue.use(Picker);
+Vue.use(DatetimePicker);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Switch);

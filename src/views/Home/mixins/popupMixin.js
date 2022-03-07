@@ -1,4 +1,6 @@
 // 这里放地址弹窗相关的代码
+import { certificatesType, sexType } from '../consts'
+import { parseTime } from '@/utils/dateFormat'
 export default {
     data() {
         return {
@@ -6,32 +8,42 @@ export default {
             // 证件类型
             certificatesTypePicker: false,
             certificatesTypeColumns: [
-                '居民身份证',
-                '港澳居民来往内地通行证',
-                '台湾居民来往内地通行证',
-                '护照',
-                '其他',
-                '港澳台居民居住证',
-                '出生医学证明'
+                ...certificatesType
             ],
             // 性别
             sexPicker: false,
-            sexColumns: ['男', '女']
+            sexColumns: [...sexType],
+            // 日期
+            birthdayPicker: false,
+            maxDate: new Date(),
+            minDate: new Date(new Date().getTime() - (31536000000 * 100)),
+            currentDate: new Date()
         }
     },
     methods: {
         onAddressConfirm(value) {
             console.log(value);
+            this.currentCity = value
             this.showAddressPicker = false;
         },
         onAddressCancel() {
             this.showAddressPicker = false;
         },
-        onCertificatesTypeConfirm(value) {
-            console.log(value);
+        onCertificatesTypeConfirm(value, index) {
+            this.certificatesType = index;
+            this.certificatesTypePicker = false;
         },
-        onSexConfirm(value) {
-            console.log(value);
-        }
+        onSexConfirm(value, index) {
+            this.sex = index;
+            this.sexPicker = false;
+        },
+        onBirthdayConfirm(value) {
+            if (value) {
+                this.birthday = parseTime(value, '{y}-{m}-{d}')
+            } else {
+                this.birthday = undefined
+            }
+            this.birthdayPicker = false
+        },
     }
 }
