@@ -1,7 +1,8 @@
 <template>
   <div class="HomeView">
-    <van-form @submit="onSubmit">
-      <QuestionModule title="行程信息">
+    <HeaderShow title="健康信息上报"></HeaderShow>
+    <van-form @submit="onSubmit" scroll-to-error>
+      <QuestionModule title="基本信息">
         <QuestionModuleItem title="姓名" required>
           <van-field
             v-model="name"
@@ -94,13 +95,24 @@
             />
           </van-popup>
         </QuestionModuleItem>
-        <QuestionModuleItem title="居住地址" required>
+        <QuestionModuleItem title="现居住地址" required>
           <van-field
-            v-model="address"
+            readonly
+            clickable
             name="address"
-            placeholder="请选择居住地址"
+            :value="currentAddressText"
+            placeholder="请选择现居住地址"
             :rules="[{ required: true }]"
+            @click="showCurrentAddressPicker = true"
           />
+          <van-popup v-model="showCurrentAddressPicker" position="bottom">
+            <van-area
+              title="请选择"
+              @confirm="onCurrentAddressConfirm"
+              @cancel="showCurrentAddressPicker = false"
+              :area-list="areaList"
+            />
+          </van-popup>
         </QuestionModuleItem>
         <QuestionModuleItem title="楼栋门牌号（详细地址）" required>
           <van-field
@@ -108,13 +120,6 @@
             name="addressDetail"
             placeholder="请输入如小区、单元、楼栋号、门牌号"
             :rules="[{ required: true }]"
-          />
-        </QuestionModuleItem>
-        <QuestionModuleItem title="单位（学校）名称">
-          <van-field
-            v-model="company"
-            name="company"
-            placeholder="请输入您的单位（学校）名称"
           />
         </QuestionModuleItem>
         <QuestionModuleItem title="目前所在城市" required>
@@ -138,7 +143,7 @@
         </QuestionModuleItem>
       </QuestionModule>
 
-      <QuestionModule title="人员类型">
+      <QuestionModule title="人员类型(必选)">
         <van-field
           name="peopleType"
           :rules="[{ required: true, message: '请选择人员类型' }]"
@@ -148,32 +153,44 @@
             <van-radio-group v-model="peopleType" icon-size="16">
               <van-radio name="1">
                 <div class="checkItem">
-                  <div class="title">来XX人员</div>
+                  <div class="title">来珠海人员</div>
                   <div class="text">
-                    非本地常住，2020年1月1日后从外地来XX，暂住旅店或投靠亲友
+                    非本地常住，2020年1月1日后从外地来珠海，暂住旅店或投靠亲友
                   </div>
                 </div>
               </van-radio>
               <van-radio name="2">
                 <div class="checkItem">
-                  <div class="title">返XX人员</div>
+                  <div class="title">返珠海人员</div>
                   <div class="text">
-                    本地常住，2020年1月1日后从外地返回或计划返回XX
+                    本地常住，2020年1月1日后从外地返回或计划返回珠海
                   </div>
                 </div>
               </van-radio>
               <van-radio name="3">
                 <div class="checkItem">
-                  <div class="title">留XX人员</div>
-                  <div class="text">2020年1月1日后一直在XX居住的人员</div>
+                  <div class="title">留珠海人员</div>
+                  <div class="text">2020年1月1日后一直在珠海居住的人员</div>
                 </div>
               </van-radio>
             </van-radio-group>
           </template>
         </van-field>
       </QuestionModule>
-      <QuestionModule title="是否居家隔离"> phone </QuestionModule>
-      <QuestionModule title="居住属性">
+      <QuestionModule title="是否居家隔离">
+        <QuestionModuleItem
+          title="相关部门已经确认需居家隔离观察人员，且在观察期内"
+        >
+          <van-field
+            v-model="isolateAddress"
+            name="isolateAddress"
+            maxLength="30"
+            clearable
+            placeholder="如是，请输入隔离地址，否则输入否"
+          />
+        </QuestionModuleItem>
+      </QuestionModule>
+      <QuestionModule title="居住属性(必选)">
         <van-field
           name="liveType"
           :rules="[{ required: true, message: '请选择居住属性' }]"
@@ -181,29 +198,13 @@
         >
           <template #input>
             <van-radio-group v-model="liveType" icon-size="16" style="flex: 1">
-              <van-radio name="1">
+              <van-radio
+                :name="index"
+                v-for="(item, index) in liveTypeEnum"
+                :key="item"
+              >
                 <div class="checkItem">
-                  <div class="title">居家自住</div>
-                </div>
-              </van-radio>
-              <van-radio name="2">
-                <div class="checkItem">
-                  <div class="title">租住</div>
-                </div>
-              </van-radio>
-              <van-radio name="3">
-                <div class="checkItem">
-                  <div class="title">投靠借助</div>
-                </div>
-              </van-radio>
-              <van-radio name="4">
-                <div class="checkItem">
-                  <div class="title">酒店旅店</div>
-                </div>
-              </van-radio>
-              <van-radio name="5">
-                <div class="checkItem">
-                  <div class="title">其他</div>
+                  <div class="title">{{ item }}</div>
                 </div>
               </van-radio>
             </van-radio-group>
@@ -218,39 +219,14 @@
               icon-size="16"
               style="flex: 1"
             >
-              <van-checkbox shape="square" name="1">
+              <van-checkbox
+                shape="square"
+                :name="index"
+                v-for="(item, index) in symptomType"
+                :key="item"
+              >
                 <div class="checkItem">
-                  <div class="title">发热</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="2">
-                <div class="checkItem">
-                  <div class="title">乏力</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="3">
-                <div class="checkItem">
-                  <div class="title">干咳</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="4">
-                <div class="checkItem">
-                  <div class="title">鼻塞</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="5">
-                <div class="checkItem">
-                  <div class="title">流涕</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="6">
-                <div class="checkItem">
-                  <div class="title">腹泻</div>
-                </div>
-              </van-checkbox>
-              <van-checkbox shape="square" name="7">
-                <div class="checkItem">
-                  <div class="title">呼吸困难</div>
+                  <div class="title">{{ item }}</div>
                 </div>
               </van-checkbox>
             </van-checkbox-group>
@@ -270,32 +246,62 @@
         <van-field name="over37" style="padding: 0">
           <template #input>
             <van-cell center title="腋下体温超过37.3摄氏度" style="padding: 0">
-              <van-switch v-model="over37" size="16" inactive-color="#dcdee0" />
+              <van-switch v-model="over37" size="20" inactive-color="#dcdee0" />
             </van-cell>
           </template>
         </van-field>
       </QuestionModule>
       <QuestionModule title="其他">
-        <van-field name="over37" style="padding: 10px 0">
+        <QuestionModuleItem
+          title="2022年3月1日起本市以外行程"
+          style="margin-top: 10px"
+        >
+          <div v-for="(item, index) in tripList" :key="index">
+            {{ item.placeOfDeparture }}
+          </div>
+          <div class="addListItem" @click="toAddTrip">
+            <van-icon name="plus" class="icon" />添加行程
+          </div>
+        </QuestionModuleItem>
+        <QuestionModuleItem
+          title="与确诊或疑似病例密切接触史"
+          style="margin-top: 10px"
+        >
+          <div v-for="(item, index) in contactRecordList" :key="index">
+            {{ item.patientName }}
+          </div>
+          <div class="addListItem" @click="toAddContactRecord">
+            <van-icon name="plus" class="icon" />添加接触记录
+          </div>
+        </QuestionModuleItem>
+        <van-field name="toHospital" style="padding: 10px 0">
           <template #input>
             <van-cell center title="去医院做过检查" style="padding: 0">
-              <van-switch v-model="over37" size="16" inactive-color="#dcdee0" />
+              <van-switch
+                v-model="toHospital"
+                size="20"
+                inactive-color="#dcdee0"
+              />
             </van-cell>
           </template>
         </van-field>
-        <van-field name="over37" style="padding: 10px 0">
+        <van-field name="needHelp" style="padding: 10px 0">
           <template #input>
             <van-cell center title="需要咨询或帮助" style="padding: 0">
-              <van-switch v-model="over37" size="16" inactive-color="#dcdee0" />
+              <van-switch
+                v-model="needHelp"
+                size="20"
+                inactive-color="#dcdee0"
+              />
             </van-cell>
           </template>
         </van-field>
       </QuestionModule>
-
+      <van-checkbox v-model="hasSee" shape="square"
+        >我已阅知本申报所列事项，并保证以上申报内容正确属实</van-checkbox
+      >
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit">
-          提交
-        </van-button>
+        <van-button block type="info" native-type="submit"> 提交 </van-button>
       </div>
     </van-form>
   </div>
@@ -304,27 +310,30 @@
 <script>
 import QuestionModule from "@/components/QuestionModule";
 import QuestionModuleItem from "@/components/QuestionModuleItem";
-
 import { mapMutations, mapState } from "vuex";
 import { areaList } from "@/utils/area";
 import formMixin from "./mixins/formMixin";
 import popupMixin from "./mixins/popupMixin";
+import { symptomType, liveTypeEnum } from "./consts";
+import HeaderShow from "@/components/HeaderShow.vue";
 
 export default {
   name: "HomeView",
   components: {
     QuestionModule,
     QuestionModuleItem,
+    HeaderShow,
   },
   mixins: [formMixin, popupMixin],
   data() {
     return {
-      // 地址选择相关
-      showAddressPicker: false,
+      hasSee: false,
+      symptomType,
+      liveTypeEnum,
     };
   },
   computed: {
-    ...mapState(["userId"]),
+    ...mapState(["userId", "contactRecordList", "tripList"]),
   },
   methods: {
     ...mapMutations({
@@ -336,6 +345,12 @@ export default {
     onConfirm(value) {
       this.value = value;
       this.showPicker = false;
+    },
+    toAddContactRecord() {
+      this.$router.push("/addContactRecord");
+    },
+    toAddTrip() {
+      this.$router.push("/addTrip");
     },
   },
   created() {
@@ -355,16 +370,24 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 20px;
+  position: relative;
+  padding-top: 60px;
   /deep/ .van-cell {
-    padding: 10px;
+    padding: 10px 0;
   }
   /deep/ .van-radio {
-    padding: 10px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #e6e6e6;
+    &:first-child {
+      padding-top: 0;
+    }
   }
   /deep/ .van-checkbox {
-    padding: 10px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #e6e6e6;
+    &:first-child {
+      padding-top: 0;
+    }
   }
   .checkItem {
     .title {
@@ -373,6 +396,14 @@ export default {
     }
     .text {
       color: #bebebe;
+    }
+  }
+  .addListItem {
+    padding: 15px 0;
+    .icon {
+      border: 1px solid #e6e6e6;
+      padding: 5px;
+      margin-right: 10px;
     }
   }
 }

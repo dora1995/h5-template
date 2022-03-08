@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/Home/HomeView.vue";
+import AddContactRecord from "../views/AddContactRecord/AddContactRecordView.vue";
+import AddTrip from "../views/AddTrip/AddTripView.vue";
 
 Vue.use(VueRouter);
 
@@ -11,18 +13,28 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/addContactRecord",
+    name: "addContactRecord",
+    component: AddContactRecord,
+
   },
+  {
+    path: "/addTrip",
+    name: "addTrip",
+    component: AddTrip,
+  },
+
 ];
 
 const router = new VueRouter({
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 });
 
 export default router;

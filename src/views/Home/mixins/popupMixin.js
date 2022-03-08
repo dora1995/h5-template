@@ -4,6 +4,7 @@ import { parseTime } from '@/utils/dateFormat'
 export default {
     data() {
         return {
+            // 地址选择相关
             showAddressPicker: false,
             // 证件类型
             certificatesTypePicker: false,
@@ -17,7 +18,9 @@ export default {
             birthdayPicker: false,
             maxDate: new Date(),
             minDate: new Date(new Date().getTime() - (31536000000 * 100)),
-            currentDate: new Date()
+            currentDate: new Date(),
+            // 现居住地址
+            showCurrentAddressPicker: false
         }
     },
     methods: {
@@ -44,6 +47,10 @@ export default {
                 this.birthday = undefined
             }
             this.birthdayPicker = false
+        },
+        onCurrentAddressConfirm(value) {
+            this.address = value
+            this.showCurrentAddressPicker = false;
         },
     }
 }

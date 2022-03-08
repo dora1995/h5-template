@@ -16,7 +16,9 @@ import {
     Radio,
     Checkbox,
     CheckboxGroup,
-    Switch
+    Switch,
+    Icon,
+    Toast
 } from "vant";
 
 Vue.use(Area);
@@ -34,3 +36,5 @@ Vue.use(RadioGroup);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Switch);
+Vue.use(Icon);
+Vue.use(Toast);
