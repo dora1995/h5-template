@@ -18,7 +18,8 @@ import {
     CheckboxGroup,
     Switch,
     Icon,
-    Toast
+    Toast,
+    Uploader
 } from "vant";
 
 Vue.use(Area);
@@ -38,3 +39,4 @@ Vue.use(CheckboxGroup);
 Vue.use(Switch);
 Vue.use(Icon);
 Vue.use(Toast);
+Vue.use(Uploader);

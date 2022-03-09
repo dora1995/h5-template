@@ -25,10 +25,9 @@ export default {
             over37: false,
             toHospital: false,
             needHelp: false,
+            nucleicResult: [],
+            healthyScreenshot: []
         }
-    },
-    methods: {
-
     },
     computed: {
         certificatesTypeValue() {

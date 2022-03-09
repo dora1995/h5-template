@@ -274,6 +274,23 @@
             <van-icon name="plus" class="icon" />添加接触记录
           </div>
         </QuestionModuleItem>
+        <QuestionModuleItem title="请上传核酸检测结果" required>
+          <div style="margin-bottom: 5px; color: #bebebe">
+            如未离开工作地，请上传粤康码截图
+          </div>
+          <van-field name="nucleicResult" style="padding: 0">
+            <template #input>
+              <van-uploader v-model="nucleicResult" max-count="1" />
+            </template>
+          </van-field>
+        </QuestionModuleItem>
+        <QuestionModuleItem title="请上传健康码截图(粤康码)" required>
+          <van-field name="healthyScreenshot" style="padding: 0">
+            <template #input>
+              <van-uploader v-model="healthyScreenshot" max-count="1" />
+            </template>
+          </van-field>
+        </QuestionModuleItem>
         <van-field name="toHospital" style="padding: 10px 0">
           <template #input>
             <van-cell center title="去医院做过检查" style="padding: 0">
@@ -341,6 +358,9 @@ export default {
     }),
     onSubmit(values) {
       console.log(values);
+
+      // todo 处理数据
+      // 1.两张图片要上传到服务器中
     },
     onConfirm(value) {
       this.value = value;
