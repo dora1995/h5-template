@@ -1,5 +1,5 @@
 // 这里放地址弹窗相关的代码
-import { certificatesType, sexType } from '../consts'
+import { certificatesType, sexType, nucleicTimeType } from '../consts'
 import { parseTime } from '@/utils/dateFormat'
 export default {
     data() {
@@ -20,7 +20,9 @@ export default {
             minDate: new Date(new Date().getTime() - (31536000000 * 100)),
             currentDate: new Date(),
             // 现居住地址
-            showCurrentAddressPicker: false
+            showCurrentAddressPicker: false,
+            nucleicTimePicker: false,
+            nucleicTimeColumns: [...nucleicTimeType],
         }
     },
     methods: {
@@ -39,6 +41,10 @@ export default {
         onSexConfirm(value, index) {
             this.sex = index;
             this.sexPicker = false;
+        },
+        onNucleicTimeConfirm(value, index) {
+            this.nucleicTime = index;
+            this.nucleicTimePicker = false;
         },
         onBirthdayConfirm(value) {
             if (value) {

@@ -274,7 +274,7 @@
             <van-icon name="plus" class="icon" />添加接触记录
           </div>
         </QuestionModuleItem>
-        <QuestionModuleItem title="请上传核酸检测结果" required>
+        <QuestionModuleItem title="请上传核酸检测结果">
           <div style="margin-bottom: 5px; color: #bebebe">
             如未离开工作地，请上传粤康码截图
           </div>
@@ -284,12 +284,31 @@
             </template>
           </van-field>
         </QuestionModuleItem>
-        <QuestionModuleItem title="请上传健康码截图(粤康码)" required>
+        <QuestionModuleItem title="请上传健康码截图(粤康码)">
           <van-field name="healthyScreenshot" style="padding: 0">
             <template #input>
               <van-uploader v-model="healthyScreenshot" max-count="1" />
             </template>
           </van-field>
+        </QuestionModuleItem>
+        <QuestionModuleItem title="核酸情况">
+          <van-field
+            readonly
+            clickable
+            name="nucleicTime"
+            :value="nucleicTimeValue"
+            placeholder="请选择"
+            @click="nucleicTimePicker = true"
+          />
+          <van-popup v-model="nucleicTimePicker" position="bottom">
+            <van-picker
+              title="核酸情况"
+              show-toolbar
+              :columns="nucleicTimeColumns"
+              @confirm="onNucleicTimeConfirm"
+              @cancel="nucleicTimePicker = false"
+            />
+          </van-popup>
         </QuestionModuleItem>
         <van-field name="toHospital" style="padding: 10px 0">
           <template #input>
@@ -355,10 +374,55 @@ export default {
   methods: {
     ...mapMutations({
       setUserId: "SET_USER_ID",
+      showLoading: "SHOW_LOADING",
+      hideLoading: "HIDE_LOADING",
     }),
-    onSubmit(values) {
+    async onSubmit(values) {
       console.log(values);
+      if (!this.hasSee) {
+        this.$toast("请勾选申报须知确认");
+        return;
+      }
+      this.showLoading();
+      const nucleicResult = this.nucleicResult[0];
+      const healthyScreenshot = this.healthyScreenshot[0];
 
+      try {
+        let data1;
+        if (nucleicResult) {
+          const param1 = new FormData(); // 创建form对象
+          param1.append("file", nucleicResult.file); // 通过append向form对象添加数据
+          // 上传第一张
+          data1 = await this.$http.post("/admin/file/upload/picture", param1, {
+            headers: { "Content-Type": "multipart/form-data" },
+            timeout: 0,
+          });
+        }
+        let data2;
+        if (healthyScreenshot) {
+          const param2 = new FormData(); // 创建form对象
+          param2.append("file", healthyScreenshot.file); // 通过append向form对象添加数据
+          // 上传第二张
+          data2 = await this.$http.post("/admin/file/upload/picture", param2, {
+            headers: { "Content-Type": "multipart/form-data" },
+            timeout: 0,
+          });
+        }
+
+        const params = {
+          ...values,
+          nucleicResultPic: data1,
+          healthyScreenshotPic: data2,
+        };
+        const data3 = await this.$http.post(`/s/${this.userId}`, {
+          content: JSON.stringify(params),
+        });
+        this.hideLoading();
+        this.$router.replace("/submitSuccess");
+      } catch (e) {
+        console.log(e);
+        this.hideLoading();
+      }
       // todo 处理数据
       // 1.两张图片要上传到服务器中
     },

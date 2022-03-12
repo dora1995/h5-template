@@ -19,7 +19,8 @@ import {
     Switch,
     Icon,
     Toast,
-    Uploader
+    Uploader,
+    Loading
 } from "vant";
 
 Vue.use(Area);
@@ -40,3 +41,4 @@ Vue.use(Switch);
 Vue.use(Icon);
 Vue.use(Toast);
 Vue.use(Uploader);
+Vue.use(Loading);

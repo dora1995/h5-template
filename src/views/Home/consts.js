@@ -32,3 +32,9 @@ export const liveTypeEnum = [
     '酒店旅店',
     '其他',
 ]
+
+export const nucleicTimeType = [
+    '24小时',
+    '48小时',
+    '72小时',
+]

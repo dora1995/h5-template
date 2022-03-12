@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     userId: "",
     contactRecordList: [],
-    tripList: []
+    tripList: [],
+    showLoading: false
   },
   getters: {},
   mutations: {
@@ -26,6 +27,12 @@ export default new Vuex.Store({
     DELETE_TRIP: (state, index) => {
       state.tripList.splice(index, 1)
     },
+    SHOW_LOADING: (state) => {
+      state.showLoading = true
+    },
+    HIDE_LOADING: (state) => {
+      state.showLoading = false
+    }
   },
   actions: {},
   modules: {},

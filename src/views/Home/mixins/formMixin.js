@@ -1,5 +1,5 @@
 // 这里放表单相关的代码
-import { certificatesType, sexType } from '../consts'
+import { certificatesType, sexType, nucleicTimeType } from '../consts'
 export default {
     data() {
         return {
@@ -26,7 +26,8 @@ export default {
             toHospital: false,
             needHelp: false,
             nucleicResult: [],
-            healthyScreenshot: []
+            healthyScreenshot: [],
+            nucleicTime: undefined
         }
     },
     computed: {
@@ -38,8 +39,15 @@ export default {
             }
         },
         sexTypeValue() {
-            if (this.sex !== '') {
+            if (this.sex !== undefined) {
                 return sexType[this.sex]
+            } else {
+                return undefined
+            }
+        },
+        nucleicTimeValue() {
+            if (this.nucleicTime !== undefined) {
+                return nucleicTimeType[this.nucleicTime]
             } else {
                 return undefined
             }

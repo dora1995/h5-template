@@ -8,7 +8,7 @@ const baseURL = config[process.env.NODE_ENV].baseUrl;
 
 const service = axios.create({
   baseURL,
-  // withCredentials: true,
+  withCredentials: true,
   timeout: 5000,
 });
 
