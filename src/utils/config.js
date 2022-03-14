@@ -6,9 +6,9 @@ module.exports = {
     baseUrl: "/api",
   },
   production: {
-    baseUrl: "/api",
+    baseUrl: "http://dgzzkj.cn/api",
   },
   publish: {
-    baseUrl: "/api",
+    baseUrl: "http://dgzzkj.cn/api",
   },
 };
