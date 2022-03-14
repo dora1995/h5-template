@@ -1,18 +1,14 @@
 module.exports = {
   local: {
-    baseUrl: "/dev-api",
-    mockUrl: "http://127.0.0.1:7001",
+    baseUrl: "/api",
   },
   development: {
-    baseUrl: "/dev-api",
-    mockUrl: "https://api.xwhx.top",
+    baseUrl: "/api",
   },
   production: {
-    baseUrl: "https://api.xwhx.top",
-    mockUrl: "https://api.xwhx.top",
+    baseUrl: "/api",
   },
   publish: {
-    baseUrl: "https://api.xwhx.top",
-    mockUrl: "https://api.xwhx.top",
+    baseUrl: "/api",
   },
 };

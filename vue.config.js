@@ -1,16 +1,21 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/zhuhai-h5/'
+    : '/',
   devServer: {
     proxy: {
-      '/dev-api': {
-        target: 'http://42.193.152.189:8111',
+      '/api': {
+        // target: 'http://42.193.152.189:8111',
+        target: 'http://zh.dgzzkj.cn',
         // ws: true,
-        pathRewrite: {
-          '^/dev-api': '', // rewrite path
-        },
+        // pathRewrite: {
+        //   '^/api': '', // rewrite path
+        // },
         changeOrigin: true
       },
     }
   },
+
 });
