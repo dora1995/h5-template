@@ -6,12 +6,12 @@ module.exports = defineConfig({
     : '/',
   devServer: {
     proxy: {
-      '/api': {
+      '/zhapi': {
         // target: 'http://42.193.152.189:8111',
         target: 'http://zh.dgzzkj.cn',
         // ws: true,
         // pathRewrite: {
-        //   '^/api': '', // rewrite path
+        //   '^/zhapi': '', // rewrite path
         // },
         changeOrigin: true
       },

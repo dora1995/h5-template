@@ -1,14 +1,14 @@
 module.exports = {
   local: {
-    baseUrl: "/api",
+    baseUrl: "/zhapi",
   },
   development: {
-    baseUrl: "/api",
+    baseUrl: "/zhapi",
   },
   production: {
-    baseUrl: "http://dgzzkj.cn/api",
+    baseUrl: "http://dgzzkj.cn/zhapi",
   },
   publish: {
-    baseUrl: "http://dgzzkj.cn/api",
+    baseUrl: "http://dgzzkj.cn/zhapi",
   },
 };

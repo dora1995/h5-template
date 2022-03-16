@@ -75,6 +75,7 @@
         </QuestionModuleItem>
         <QuestionModuleItem title="出生日期" required>
           <van-field
+            readonly
             :value="birthday"
             clickable
             name="birthday"
@@ -117,6 +118,7 @@
         <QuestionModuleItem title="楼栋门牌号（详细地址）" required>
           <van-field
             v-model="addressDetail"
+            clearable
             name="addressDetail"
             placeholder="请输入如小区、单元、楼栋号、门牌号"
             :rules="[{ required: true }]"
@@ -256,8 +258,26 @@
           title="2022年3月1日起本市以外行程"
           style="margin-top: 10px"
         >
-          <div v-for="(item, index) in tripList" :key="index">
-            {{ item.placeOfDeparture }}
+          <div
+            v-for="(item, index) in tripList"
+            :key="index"
+            class="recordItem"
+          >
+            <div style="margin-bottom: 10px">
+              <span style="margin-right: 5px">{{ item.destination }}</span
+              >/<span style="margin-left: 5px">{{ item.arrivalDate }}</span>
+            </div>
+            <div>
+              <span style="margin-right: 5px">{{
+                trafficType[item.liveType]
+              }}</span
+              >/<span style="margin-left: 5px">{{ item.trafficInfo }}</span>
+            </div>
+            <van-icon
+              name="cross"
+              class="close"
+              @click="() => deleteTrip(index)"
+            />
           </div>
           <div class="addListItem" @click="toAddTrip">
             <van-icon name="plus" class="icon" />添加行程
@@ -267,8 +287,22 @@
           title="与确诊或疑似病例密切接触史"
           style="margin-top: 10px"
         >
-          <div v-for="(item, index) in contactRecordList" :key="index">
-            {{ item.patientName }}
+          <div
+            v-for="(item, index) in contactRecordList"
+            :key="index"
+            class="recordItem"
+          >
+            <div>
+              <span style="margin-right: 5px">{{ item.patientName }}</span
+              >/<span style="margin-left: 5px">{{
+                item.contactTime || "未知"
+              }}</span>
+            </div>
+            <van-icon
+              name="cross"
+              class="close"
+              @click="() => deleteContactRecord(index)"
+            />
           </div>
           <div class="addListItem" @click="toAddContactRecord">
             <van-icon name="plus" class="icon" />添加接触记录
@@ -353,6 +387,8 @@ import popupMixin from "./mixins/popupMixin";
 import { symptomType, liveTypeEnum } from "./consts";
 import HeaderShow from "@/components/HeaderShow.vue";
 
+import { trafficType } from "@/views/AddTrip/consts";
+
 export default {
   name: "HomeView",
   components: {
@@ -366,6 +402,7 @@ export default {
       hasSee: false,
       symptomType,
       liveTypeEnum,
+      trafficType: trafficType,
     };
   },
   computed: {
@@ -411,9 +448,14 @@ export default {
 
         const params = {
           ...values,
-          nucleicResultPic: data1,
-          healthyScreenshotPic: data2,
+          nucleicResultPic: data1 ? data1.data : undefined,
+          healthyScreenshotPic: data2 ? data2.data : undefined,
+          contactRecordList: this.contactRecordList,
+          tripList: this.tripList,
         };
+        delete params.healthyScreenshot;
+        delete params.nucleicResult;
+
         const data3 = await this.$http.post(`/s/${this.userId}`, {
           content: JSON.stringify(params),
         });
@@ -435,6 +477,12 @@ export default {
     },
     toAddTrip() {
       this.$router.push("/addTrip");
+    },
+    deleteContactRecord(index) {
+      this.$store.commit("DELETE_CONTACT_RECORD", index);
+    },
+    deleteTrip(index) {
+      this.$store.commit("DELETE_TRIP", index);
     },
   },
   created() {
@@ -488,6 +536,18 @@ export default {
       border: 1px solid #e6e6e6;
       padding: 5px;
       margin-right: 10px;
+    }
+  }
+  .recordItem {
+    border: 1px solid #e6e6e6;
+    padding: 10px;
+    position: relative;
+    margin-bottom: 10px;
+    .close {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
     }
   }
 }

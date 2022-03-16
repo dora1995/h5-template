@@ -5,6 +5,7 @@
       @click="back"
       name="arrow-left"
       class="goBack"
+      size="20"
     />
     {{ title || "" }}
   </div>

@@ -28,6 +28,7 @@
         <QuestionModuleItem title="出发日期" required>
           <van-field
             :value="timeOfDeparture"
+            readonly
             clickable
             name="timeOfDeparture"
             placeholder="请选择出发日期"
@@ -69,6 +70,7 @@
           <van-field
             :value="arrivalDate"
             clickable
+            readonly
             name="arrivalDate"
             placeholder="请选择抵达日期"
             @click="arrivalDatePicker = true"
