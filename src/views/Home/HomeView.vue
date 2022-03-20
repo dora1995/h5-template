@@ -73,7 +73,7 @@
             />
           </van-popup>
         </QuestionModuleItem>
-        <QuestionModuleItem title="出生日期" required>
+        <!-- <QuestionModuleItem title="出生日期" required>
           <van-field
             readonly
             :value="birthday"
@@ -95,7 +95,7 @@
               @cancel="birthdayPicker = false"
             />
           </van-popup>
-        </QuestionModuleItem>
+        </QuestionModuleItem> -->
         <QuestionModuleItem title="现居住地址" required>
           <van-field
             readonly
@@ -448,6 +448,8 @@ export default {
 
         const params = {
           ...values,
+          // certificatesType: certificatesTypeValue,
+          // sex: sexTypeValue,
           nucleicResultPic: data1 ? data1.data : undefined,
           healthyScreenshotPic: data2 ? data2.data : undefined,
           contactRecordList: this.contactRecordList,
