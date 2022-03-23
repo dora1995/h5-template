@@ -153,7 +153,7 @@
         >
           <template #input>
             <van-radio-group v-model="peopleType" icon-size="16">
-              <van-radio name="1">
+              <van-radio name="0">
                 <div class="checkItem">
                   <div class="title">来珠海人员</div>
                   <div class="text">
@@ -161,7 +161,7 @@
                   </div>
                 </div>
               </van-radio>
-              <van-radio name="2">
+              <van-radio name="1">
                 <div class="checkItem">
                   <div class="title">返珠海人员</div>
                   <div class="text">
@@ -169,7 +169,7 @@
                   </div>
                 </div>
               </van-radio>
-              <van-radio name="3">
+              <van-radio name="2">
                 <div class="checkItem">
                   <div class="title">留珠海人员</div>
                   <div class="text">2020年1月1日后一直在珠海居住的人员</div>
@@ -448,8 +448,9 @@ export default {
 
         const params = {
           ...values,
-          // certificatesType: certificatesTypeValue,
-          // sex: sexTypeValue,
+          certificatesType: this.certificatesType,
+          sex: this.sex,
+          nucleicTime: this.nucleicTime,
           nucleicResultPic: data1 ? data1.data : undefined,
           healthyScreenshotPic: data2 ? data2.data : undefined,
           contactRecordList: this.contactRecordList,
